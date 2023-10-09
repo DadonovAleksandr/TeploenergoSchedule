@@ -9,6 +9,8 @@ using TeploenergoSchedule.Service.UserDialogService;
 using TeploenergoSchedule.ViewModels.Base;
 using System.Collections.ObjectModel;
 using System.IO;
+using OfficeOpenXml;
+using TeploenergoSchedule.Service;
 
 namespace TeploenergoSchedule.ViewModels.MainWindowVm
 {
@@ -30,6 +32,7 @@ namespace TeploenergoSchedule.ViewModels.MainWindowVm
 
             #region Commands
             LoadFiles = new RelayCommand(OnLoadFilesExecuted, CanLoadFilesExecute);
+            CorrectFiles = new RelayCommand(OnCorrectFilesExecuted, CanCorrectFilesExecute);
             #endregion
         }
 
@@ -79,6 +82,27 @@ namespace TeploenergoSchedule.ViewModels.MainWindowVm
         }
 
         private bool CanLoadFilesExecute(object p) => true;
+        #endregion
+
+        #region CorrectFiles
+        public ICommand CorrectFiles { get; }
+        private void OnCorrectFilesExecuted(object p)
+        {
+            try
+            {
+                var corrector = new Corrector();
+                foreach(string file in _fileNames)
+                {
+                    corrector.Correct(file);
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex.Message);
+            }
+        }
+
+        private bool CanCorrectFilesExecute(object p) => true;
         #endregion
 
         #region Exit

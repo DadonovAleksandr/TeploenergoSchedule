@@ -16,7 +16,6 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -27,12 +26,28 @@
                         Margin="5"
                         Width="180" HorizontalAlignment="Right"/>
                 <ListBox ItemsSource="{Binding FileNames}">
-                    
+
                 </ListBox>
             </DockPanel>
+        </GroupBox>
+        <GroupBox Grid.Row="1" Header="Корректировка файлов">
+            <StackPanel Orientation="Vertical" Margin="5">
+                <StackPanel Orientation="Horizontal" Margin="0,2">
+                    <TextBlock Text="Год утверждения"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,2">
+                    <TextBlock Text="Год выполнения"/>
+                </StackPanel>
+                <Button Content="Корректировать" 
+                        Command="{Binding CorrectFiles}"
+                        Margin="5"
+                        HorizontalAlignment="Right"
+                        Width="180"/>
+            </StackPanel>
+            
             
         </GroupBox>
-        <StatusBar Grid.Row="3">
+        <StatusBar Grid.Row="2">
             <StatusBarItem>
                 <TextBlock Text="jsdnjfk"/>
             </StatusBarItem>
