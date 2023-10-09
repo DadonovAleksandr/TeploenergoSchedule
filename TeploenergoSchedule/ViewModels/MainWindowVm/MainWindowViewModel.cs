@@ -8,8 +8,6 @@ using TeploenergoSchedule.Model.AppSettings.AppConfig;
 using TeploenergoSchedule.Service.UserDialogService;
 using TeploenergoSchedule.ViewModels.Base;
 using System.Collections.ObjectModel;
-using System.IO;
-using OfficeOpenXml;
 using TeploenergoSchedule.Service;
 
 namespace TeploenergoSchedule.ViewModels.MainWindowVm
