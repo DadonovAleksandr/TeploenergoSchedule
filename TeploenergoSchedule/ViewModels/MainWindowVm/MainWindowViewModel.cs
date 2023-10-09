@@ -1,7 +1,5 @@
 ﻿using Microsoft.Win32;
-using System.Linq;
 using System;
-using System.Linq.Expressions;
 using System.Windows;
 using System.Windows.Input;
 using TeploenergoSchedule.Infrastructure.Commands;
