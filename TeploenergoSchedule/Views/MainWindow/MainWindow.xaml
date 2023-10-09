@@ -7,7 +7,35 @@
         mc:Ignorable="d"
         DataContext="{Binding MainWindowViewModel, Source={StaticResource Locator}}"
         Title="{Binding Title}" Height="450" Width="800">
+    <Window.Resources>
+        <Style TargetType="GroupBox">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+    </Window.Resources>
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Row="0" Header="Выбор файлов для корректировки">
+            <DockPanel Margin="5">
+                <Button DockPanel.Dock="Bottom" Content="Загрузить список файлов"
+                        Command="{Binding LoadFiles}"
+                        Margin="5"
+                        Width="180" HorizontalAlignment="Right"/>
+                <ListBox ItemsSource="{Binding FileNames}">
+                    
+                </ListBox>
+            </DockPanel>
+            
+        </GroupBox>
+        <StatusBar Grid.Row="3">
+            <StatusBarItem>
+                <TextBlock Text="jsdnjfk"/>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>
