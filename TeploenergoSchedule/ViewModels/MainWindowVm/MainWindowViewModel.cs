@@ -27,6 +27,9 @@ namespace TeploenergoSchedule.ViewModels.MainWindowVm
             _userDialogService = userDialogService;
 
             FileNames = new ObservableCollection<string>();
+            
+            _yearOfApproval = _appConfig.CorrectParameters.YearOfApproval;
+            _yearOfImplementation = _appConfig.CorrectParameters.YearOfImplementation;
 
             #region Commands
             LoadFiles = new RelayCommand(OnLoadFilesExecuted, CanLoadFilesExecute);
@@ -39,7 +42,10 @@ namespace TeploenergoSchedule.ViewModels.MainWindowVm
         /// </summary>
         public void OnExit()
         {
-            //_projectConfigurationRepository?.Save();
+            if(!string.IsNullOrEmpty(_yearOfApproval))
+                _appConfig.CorrectParameters.YearOfApproval = _yearOfApproval;
+            if (!string.IsNullOrEmpty(_yearOfImplementation))
+                _appConfig.CorrectParameters.YearOfImplementation = _yearOfImplementation;
         }
         /* ------------------------------------------------------------------------------------------------------------ */
         #region Commands
@@ -114,6 +120,32 @@ namespace TeploenergoSchedule.ViewModels.MainWindowVm
         /* ------------------------------------------------------------------------------------------------------------ */
 
         public ObservableCollection<string> FileNames { get; set; }
+
+        #region year of approval
+
+        private string _yearOfApproval;
+        /// <summary>
+        /// Год утверждения
+        /// </summary>
+        public string YearOfApproval
+        {
+            get => _yearOfApproval;
+            set => Set(ref _yearOfApproval, value);
+        }
+        #endregion
+
+        #region year of implementation
+
+        private string _yearOfImplementation;
+        /// <summary>
+        /// Год выполнения
+        /// </summary>
+        public string YearOfImplementation
+        {
+            get => _yearOfImplementation;
+            set => Set(ref _yearOfImplementation, value);
+        }
+        #endregion
 
         #region Window title
 
