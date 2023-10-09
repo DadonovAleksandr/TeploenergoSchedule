@@ -6,6 +6,7 @@ namespace TeploenergoSchedule.Model.AppSettings.AppConfig
 {
     public interface IAppConfig
     {
+        ILoadFilesSettings LoadFilesSettings { get; set; }
     }
 
     public static class AppConfig

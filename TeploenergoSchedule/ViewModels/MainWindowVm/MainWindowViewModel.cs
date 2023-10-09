@@ -8,6 +8,7 @@ using TeploenergoSchedule.Model.AppSettings.AppConfig;
 using TeploenergoSchedule.Service.UserDialogService;
 using TeploenergoSchedule.ViewModels.Base;
 using System.Collections.ObjectModel;
+using System.IO;
 
 namespace TeploenergoSchedule.ViewModels.MainWindowVm
 {
@@ -50,7 +51,11 @@ namespace TeploenergoSchedule.ViewModels.MainWindowVm
             {
                 var ofd = new OpenFileDialog();
 
-                //ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyComputer);
+                //if(!string.IsNullOrEmpty(_appConfig.LoadFilesSettings.DefaultFolderPath) 
+                //    && Directory.Exists(_appConfig.LoadFilesSettings.DefaultFolderPath))
+                //{
+                //    ofd.InitialDirectory = _appConfig.LoadFilesSettings.DefaultFolderPath;
+                //}
                 ofd.Filter = "xlsx files|*.xlsx";
                 ofd.RestoreDirectory = true;
                 ofd.Multiselect = true;
@@ -59,6 +64,8 @@ namespace TeploenergoSchedule.ViewModels.MainWindowVm
                     return;
                 
                 _fileNames = ofd.FileNames;
+                //_appConfig.LoadFilesSettings.DefaultFolderPath = Path.GetDirectoryName(ofd.FileName);
+
                 FileNames.Clear();
                 foreach(string file in _fileNames)
                 {
