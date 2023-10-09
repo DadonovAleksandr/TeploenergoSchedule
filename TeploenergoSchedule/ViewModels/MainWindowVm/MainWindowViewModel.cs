@@ -94,11 +94,12 @@ namespace TeploenergoSchedule.ViewModels.MainWindowVm
         {
             try
             {
-                var corrector = new Corrector();
+                var corrector = new Corrector(_yearOfApproval, _yearOfImplementation);
                 foreach(string file in _fileNames)
                 {
                     corrector.Correct(file);
                 }
+                _userDialogService.ShowInformation("Корректировка содержимого файлов выполнена!");
             }
             catch (Exception ex)
             {
