@@ -6,6 +6,8 @@
         xmlns:local="clr-namespace:TeploenergoSchedule"
         mc:Ignorable="d"
         DataContext="{Binding MainWindowViewModel, Source={StaticResource Locator}}"
+        MinWidth="500" MinHeight="400"
+        ResizeMode="CanResizeWithGrip"
         Title="{Binding Title}" Height="450" Width="800">
     <Window.Resources>
         <Style TargetType="GroupBox">
@@ -62,13 +64,7 @@
                         HorizontalAlignment="Right"
                         Width="180"/>
             </Grid>
-            
-            
         </GroupBox>
-        <StatusBar Grid.Row="2">
-            <StatusBarItem>
-                <TextBlock Text="jsdnjfk"/>
-            </StatusBarItem>
-        </StatusBar>
+        
     </Grid>
 </Window>
