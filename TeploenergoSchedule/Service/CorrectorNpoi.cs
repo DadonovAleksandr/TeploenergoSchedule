@@ -13,8 +13,8 @@ namespace TeploenergoSchedule.Service;
 internal class CorrectorNpoi
 {
     private static Logger _log = LogManager.GetCurrentClassLogger();
-    private readonly Regex regexYearOfApproval = new Regex(@"^[_"" ]*(20)\d{2}\s+г");
-    private readonly Regex regexYearOfImplementation = new Regex(@"\sна\s(20)\d{2}\s+г");
+    private readonly Regex regexYearOfApproval = new Regex(@"^[_"" ]*(20)\d{2}\s*г");
+    private readonly Regex regexYearOfImplementation = new Regex(@"\sна\s(20)\d{2}\s*г");
     private readonly Regex regexYear = new Regex(@"(20)\d{2}");
     private readonly string _yearOfApproval;
     private readonly string _yearOfImplementation;
