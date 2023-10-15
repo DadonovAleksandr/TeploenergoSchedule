@@ -15,9 +15,9 @@ internal class FileStateToColorConvertor : IValueConverter
         return state switch
         {
             FileStateEnum.None => Brushes.Black,
-            FileStateEnum.Processing => Brushes.Orange,
+            FileStateEnum.Processing => Brushes.DarkGray,
             FileStateEnum.CorrectedSuccess => Brushes.Green,
-            FileStateEnum.CorrectedWithWarning => Brushes.Yellow,
+            FileStateEnum.CorrectedWithWarning => Brushes.Peru,
             FileStateEnum.Error => Brushes.Red,
             _ => Brushes.DarkGray
         };

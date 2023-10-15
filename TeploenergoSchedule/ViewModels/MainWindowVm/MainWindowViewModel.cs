@@ -96,7 +96,7 @@ namespace TeploenergoSchedule.ViewModels.MainWindowVm
         {
             try
             {
-                var corrector = new Corrector(_yearOfApproval, _yearOfImplementation);
+                var corrector = new CorrectorNpoi(_yearOfApproval, _yearOfImplementation);
                 foreach(var file in FileStates)
                 {
                     corrector.Correct(file);
