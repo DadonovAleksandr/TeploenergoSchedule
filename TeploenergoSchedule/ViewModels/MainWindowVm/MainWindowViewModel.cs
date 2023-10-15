@@ -1,5 +1,4 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Input;
 using TeploenergoSchedule.Infrastructure.Commands;
@@ -9,6 +8,9 @@ using TeploenergoSchedule.Service.UserDialogService;
 using TeploenergoSchedule.ViewModels.Base;
 using System.Collections.ObjectModel;
 using TeploenergoSchedule.Service;
+using TeploenergoSchedule.Model.FileInfo;
+using System.IO;
+using Microsoft.Win32;
 
 namespace TeploenergoSchedule.ViewModels.MainWindowVm
 {
@@ -26,7 +28,7 @@ namespace TeploenergoSchedule.ViewModels.MainWindowVm
             _appConfig = AppConfig.GetConfigFromDefaultPath();
             _userDialogService = userDialogService;
 
-            FileNames = new ObservableCollection<string>();
+            FileStates = new ObservableCollection<FileState>();
             
             _yearOfApproval = _appConfig.CorrectParameters.YearOfApproval;
             _yearOfImplementation = _appConfig.CorrectParameters.YearOfImplementation;
@@ -58,12 +60,12 @@ namespace TeploenergoSchedule.ViewModels.MainWindowVm
             {
                 var ofd = new OpenFileDialog();
 
-                //if(!string.IsNullOrEmpty(_appConfig.LoadFilesSettings.DefaultFolderPath) 
-                //    && Directory.Exists(_appConfig.LoadFilesSettings.DefaultFolderPath))
-                //{
-                //    ofd.InitialDirectory = _appConfig.LoadFilesSettings.DefaultFolderPath;
-                //}
-                ofd.Filter = "xlsx files|*.xlsx";
+                if (!string.IsNullOrEmpty(_appConfig.LoadFilesSettings.DefaultFolderPath)
+                    && Directory.Exists(_appConfig.LoadFilesSettings.DefaultFolderPath))
+                {
+                    ofd.InitialDirectory = _appConfig.LoadFilesSettings.DefaultFolderPath;
+                }
+                ofd.Filter = "Excel files|*.xlsx;*.xls";
                 ofd.RestoreDirectory = true;
                 ofd.Multiselect = true;
 
@@ -71,12 +73,12 @@ namespace TeploenergoSchedule.ViewModels.MainWindowVm
                     return;
                 
                 _fileNames = ofd.FileNames;
-                //_appConfig.LoadFilesSettings.DefaultFolderPath = Path.GetDirectoryName(ofd.FileName);
+                _appConfig.LoadFilesSettings.DefaultFolderPath = Path.GetDirectoryName(ofd.FileName);
 
-                FileNames.Clear();
+                FileStates.Clear();
                 foreach(string file in _fileNames)
                 {
-                    FileNames.Add(file);    
+                    FileStates.Add(new(file));    
                 }
             }
             catch (Exception ex)
@@ -95,7 +97,7 @@ namespace TeploenergoSchedule.ViewModels.MainWindowVm
             try
             {
                 var corrector = new Corrector(_yearOfApproval, _yearOfImplementation);
-                foreach(string file in _fileNames)
+                foreach(var file in FileStates)
                 {
                     corrector.Correct(file);
                 }
@@ -120,7 +122,7 @@ namespace TeploenergoSchedule.ViewModels.MainWindowVm
 
         /* ------------------------------------------------------------------------------------------------------------ */
 
-        public ObservableCollection<string> FileNames { get; set; }
+        public ObservableCollection<FileState> FileStates { get; set; }
 
         #region year of approval
 

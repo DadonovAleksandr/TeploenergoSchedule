@@ -2,6 +2,7 @@
 using OfficeOpenXml;
 using System.IO;
 using System.Text.RegularExpressions;
+using TeploenergoSchedule.Model.FileInfo;
 
 namespace TeploenergoSchedule.Service;
 
@@ -20,20 +21,22 @@ internal class Corrector
         _yearOfImplementation = yearOfImplementation;
     }
 
-    public bool Correct(string filePath)
+    public bool Correct(FileState fileState)
     {
-        _log.Debug($"Корректировка файла: \"{filePath}\"");
+        _log.Debug($"Корректировка файла: \"{fileState}\"");
+        fileState.State = FileStateEnum.Processing;
         ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-        if (!File.Exists(filePath))
+        if (!File.Exists(fileState.Path))
         {
-            _log.Error($"Файл \"{filePath}\" не существует");
+            _log.Error($"Файл \"{fileState}\" не существует");
+            fileState.State = FileStateEnum.Error;
             throw new FileNotFoundException();
         }
             
-        using (var package = new ExcelPackage(new FileInfo(filePath)))
+        using (var package = new ExcelPackage(new FileInfo(fileState.Path)))
         {
-            _log.Debug($"Открываем файл \"{filePath}\"");
+            _log.Debug($"Открываем файл \"{fileState}\"");
             foreach(var worksheet in package.Workbook.Worksheets)
             {
                 var rowStart = worksheet.Dimension.Start.Row;  
@@ -69,10 +72,12 @@ internal class Corrector
                 if(yearOfApprovalCount == 1 && yearOfImplementationCount == 2) 
                 {
                     _log.Debug($"Корректировка листа \"{worksheet.Name}\" выполнена успешно");
+                    fileState.State = FileStateEnum.CorrectedSuccess;
                 }
                 else
                 {
                     _log.Warn($"Корректировка листа \"{worksheet.Name}\" выполнена некорректно");
+                    fileState.State = FileStateEnum.CorrectedWithWarning;
                 }
             }
             package.Save();
@@ -80,6 +85,5 @@ internal class Corrector
 
         return true;
     }
-
 
 }

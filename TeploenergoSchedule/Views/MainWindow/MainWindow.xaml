@@ -4,12 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TeploenergoSchedule"
+        xmlns:c="clr-namespace:TeploenergoSchedule.Infrastructure.Convertors"
         mc:Ignorable="d"
         DataContext="{Binding MainWindowViewModel, Source={StaticResource Locator}}"
         MinWidth="500" MinHeight="400"
         ResizeMode="CanResizeWithGrip"
         Title="{Binding Title}" Height="450" Width="800">
     <Window.Resources>
+        <c:FileStateToColorConvertor x:Key="FileStateToColor"/>
         <Style TargetType="GroupBox">
             <Setter Property="Margin" Value="5"/>
             <Setter Property="FontSize" Value="14"/>
@@ -27,8 +29,12 @@
                         Command="{Binding LoadFiles}"
                         Margin="5"
                         Width="180" HorizontalAlignment="Right"/>
-                <ListBox ItemsSource="{Binding FileNames}">
-
+                <ListBox ItemsSource="{Binding FileStates, Mode=OneWay}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path}" Foreground="{Binding State, Converter={StaticResource FileStateToColor}}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
                 </ListBox>
             </DockPanel>
         </GroupBox>
