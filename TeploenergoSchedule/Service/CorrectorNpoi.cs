@@ -1,15 +1,10 @@
 ﻿using NLog;
-using NPOI.HSSF.Record.Aggregates;
 using NPOI.HSSF.UserModel;
-using NPOI.POIFS.NIO;
-using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System;
-using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
 using TeploenergoSchedule.Model.FileInfo;
 
@@ -18,7 +13,7 @@ namespace TeploenergoSchedule.Service;
 internal class CorrectorNpoi
 {
     private static Logger _log = LogManager.GetCurrentClassLogger();
-    private readonly Regex regexYearOfApproval = new Regex(@"_+(20)\d{2}\s+г");
+    private readonly Regex regexYearOfApproval = new Regex(@"^[_"" ]*(20)\d{2}\s+г");
     private readonly Regex regexYearOfImplementation = new Regex(@"\sна\s(20)\d{2}\s+г");
     private readonly Regex regexYear = new Regex(@"(20)\d{2}");
     private readonly string _yearOfApproval;
@@ -110,6 +105,8 @@ internal class CorrectorNpoi
                     {
                         var data = rowData.GetCell(col)?.ToString() ?? string.Empty;
                         _log.Trace($"[{row},{col}]:\"{data}\"");
+                        //if (regexYear.IsMatch(data))
+                        //    _log.Debug($"[{row},{col}]:\"{data}\" - содержит год");
                         if (regexYearOfApproval.IsMatch(data))
                         {
                             _log.Debug($"[{row},{col}]:\"{data}\" - содержит год утверждения");
