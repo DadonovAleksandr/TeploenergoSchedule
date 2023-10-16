@@ -12,7 +12,6 @@ using TeploenergoSchedule.Model.FileInfo;
 using System.IO;
 using Microsoft.Win32;
 using System.Threading.Tasks;
-using System.Windows.Threading;
 
 namespace TeploenergoSchedule.ViewModels.MainWindowVm
 {
@@ -59,7 +58,7 @@ namespace TeploenergoSchedule.ViewModels.MainWindowVm
         {
             try
             {
-                var corrector = new CorrectorNpoi(_yearOfApproval, _yearOfImplementation);
+                var corrector = new Corrector(_yearOfApproval, _yearOfImplementation);
                 foreach (var file in FileStates)
                 {
                     corrector.Correct(file);
