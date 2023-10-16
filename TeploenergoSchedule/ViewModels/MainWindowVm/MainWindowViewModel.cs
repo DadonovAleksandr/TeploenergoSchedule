@@ -11,6 +11,8 @@ using TeploenergoSchedule.Service;
 using TeploenergoSchedule.Model.FileInfo;
 using System.IO;
 using Microsoft.Win32;
+using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace TeploenergoSchedule.ViewModels.MainWindowVm
 {
@@ -49,6 +51,28 @@ namespace TeploenergoSchedule.ViewModels.MainWindowVm
             if (!string.IsNullOrEmpty(_yearOfImplementation))
                 _appConfig.CorrectParameters.YearOfImplementation = _yearOfImplementation;
         }
+
+        /// <summary>
+        /// Обработка файлов
+        /// </summary>
+        private void CorrectFilesProcess()
+        {
+            try
+            {
+                var corrector = new CorrectorNpoi(_yearOfApproval, _yearOfImplementation);
+                foreach (var file in FileStates)
+                {
+                    corrector.Correct(file);
+                }
+                Application.Current.Dispatcher.BeginInvoke(new Action(() => 
+                    _userDialogService.ShowInformation("Корректировка содержимого файлов выполнена!")));
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex.Message);
+            }
+        }
+
         /* ------------------------------------------------------------------------------------------------------------ */
         #region Commands
 
@@ -92,22 +116,7 @@ namespace TeploenergoSchedule.ViewModels.MainWindowVm
 
         #region CorrectFiles
         public ICommand CorrectFiles { get; }
-        private void OnCorrectFilesExecuted(object p)
-        {
-            try
-            {
-                var corrector = new CorrectorNpoi(_yearOfApproval, _yearOfImplementation);
-                foreach(var file in FileStates)
-                {
-                    corrector.Correct(file);
-                }
-                _userDialogService.ShowInformation("Корректировка содержимого файлов выполнена!");
-            }
-            catch (Exception ex)
-            {
-                _log.Error(ex.Message);
-            }
-        }
+        private void OnCorrectFilesExecuted(object p) => Task.Run(() => CorrectFilesProcess());
 
         private bool CanCorrectFilesExecute(object p) => true;
         #endregion
