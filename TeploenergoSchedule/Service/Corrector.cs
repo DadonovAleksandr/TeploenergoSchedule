@@ -16,6 +16,11 @@ internal class Corrector
     private readonly Regex regexYearOfApproval = new Regex(@"^[_"" ]*(20)\d{2}\s*г");
     private readonly Regex regexYearOfImplementation = new Regex(@"\sна\s(20)\d{2}\s*г");
     private readonly Regex regexYear = new Regex(@"(20)\d{2}");
+    private readonly Regex regexOldPost = new Regex(@"Зам\.\s*генерального директора по оперативному управлению и эксплуатации\s*-\s*технический директор АО\s*""Теплоэнерго""", RegexOptions.Compiled);
+
+    private readonly string NEW_POST =
+        "Главный инженер АО \"Теплоэнерго\"";
+
     private readonly string _yearOfApproval;
     private readonly string _yearOfImplementation;
 
@@ -92,6 +97,7 @@ internal class Corrector
         _log.Debug($"Корректировка листа \"{sheet.SheetName}\" в диапазоне строк: [{rowStart}] - [{rowEnd}]");
         var yearOfApprovalCount = 0;
         var yearOfImplementationCount = 0;
+        var postReplacementCount = 0;
         for (int row = rowStart; row < rowEnd; row++)
         {
             IRow rowData = sheet.GetRow(row);
@@ -105,8 +111,6 @@ internal class Corrector
                     {
                         var data = rowData.GetCell(col)?.ToString() ?? string.Empty;
                         _log.Trace($"[{row},{col}]:\"{data}\"");
-                        //if (regexYear.IsMatch(data))
-                        //    _log.Debug($"[{row},{col}]:\"{data}\" - содержит год");
                         if (regexYearOfApproval.IsMatch(data))
                         {
                             _log.Debug($"[{row},{col}]:\"{data}\" - содержит год утверждения");
@@ -121,12 +125,19 @@ internal class Corrector
                             rowData.GetCell(col).SetCellValue(data.Replace(oldYear, _yearOfImplementation));
                             yearOfImplementationCount++;
                         }
+                        if (regexOldPost.IsMatch(data))
+                        {
+                            _log.Debug($"[{row},{col}]:\"{data}\" - содержит должность для замены");
+                            var replaced = regexOldPost.Replace(data, NEW_POST);
+                            rowData.GetCell(col).SetCellValue(replaced);
+                            postReplacementCount++;
+                        }
                     }
                 }
             }
         }
 
-        if (yearOfApprovalCount == 1 && yearOfImplementationCount == 2)
+        if (yearOfApprovalCount == 1 && yearOfImplementationCount == 2 && postReplacementCount > 0)
         {
             _log.Debug($"Корректировка листа \"{sheet.SheetName}\" выполнена успешно");
             return true;
